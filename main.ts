@@ -62,31 +62,19 @@ function task_manager () {
 }
 function morse (text: string) {
     if (text == "A") {
-        full_screen_light.showImage(0)
-        basic.pause(200)
-        basic.clearScreen()
-        basic.pause(400)
-        full_screen_light.showImage(0)
-        basic.pause(800)
-        basic.clearScreen()
+        music.playTone(440, music.beat(BeatFraction.Quarter))
+        music.rest(music.beat(BeatFraction.Eighth))
+        music.playTone(440, music.beat(BeatFraction.Whole))
     } else {
-        full_screen_light.showImage(0)
-        basic.pause(800)
-        basic.clearScreen()
-        basic.pause(400)
-        full_screen_light.showImage(0)
-        basic.pause(200)
-        basic.clearScreen()
-        basic.pause(400)
-        full_screen_light.showImage(0)
-        basic.pause(200)
-        basic.clearScreen()
-        basic.pause(400)
-        full_screen_light.showImage(0)
-        basic.pause(200)
-        basic.clearScreen()
+        music.playTone(440, music.beat(BeatFraction.Whole))
+        music.rest(music.beat(BeatFraction.Eighth))
+        music.playTone(440, music.beat(BeatFraction.Quarter))
+        music.rest(music.beat(BeatFraction.Eighth))
+        music.playTone(440, music.beat(BeatFraction.Quarter))
+        music.rest(music.beat(BeatFraction.Eighth))
+        music.playTone(440, music.beat(BeatFraction.Quarter))
     }
-    basic.pause(2000)
+    music.rest(music.beat(BeatFraction.Breve))
 }
 input.onButtonPressed(Button.AB, function () {
     if (task_ongoing == 0) {
@@ -95,13 +83,7 @@ input.onButtonPressed(Button.AB, function () {
 })
 function task_4 () {
     task_ongoing = 1
-    full_screen_light = images.createImage(`
-        # # # # #
-        # # # # #
-        # # # # #
-        # # # # #
-        # # # # #
-        `)
+    basic.pause(1000)
     morse("A")
     morse("B")
     morse("A")
@@ -142,7 +124,6 @@ radio.onReceivedValue(function (name, value) {
     task_3_receiver_activated = 0
     task_3_finish_activated = 0
 })
-let full_screen_light: Image = null
 let task_no = 0
 let beacon_leds: number[] = []
 let task_3_finish_activated = 0
