@@ -1,3 +1,6 @@
+function task_3 () {
+    task_ongoing = 1
+}
 function convert_number_to_led_plot (num: number) {
     beacon_leds = [num % 5 - 1, (num - num % 5) / 5]
     return beacon_leds
@@ -44,14 +47,30 @@ radio.onReceivedValue(function (name, value) {
             led.plot(convert_number_to_led_plot(value)[0], convert_number_to_led_plot(value)[1])
             task_no = value
         }
+    } else if (task_ongoing == 1 && task_no == 3) {
+        if (radio.receivedPacket(RadioPacketProperty.SignalStrength) > -75) {
+            if (value == 3) {
+                task_3_receiver_activated = 1
+            }
+        }
+    } else if (task_ongoing == 1 && task_no == 3) {
+        if (radio.receivedPacket(RadioPacketProperty.SignalStrength) > -75) {
+            if (value == 18) {
+                task_3_finish_activated = 1
+            }
+        }
     }
     basic.pause(500)
     basic.clearScreen()
     incoming_signal = 0
+    task_3_receiver_activated = 0
+    task_3_finish_activated = 0
 })
+let task_3_finish_activated = 0
+let task_3_receiver_activated = 0
 let task_no = 0
-let task_ongoing = 0
 let beacon_leds: number[] = []
+let task_ongoing = 0
 let incoming_signal = 0
 radio.setGroup(128)
 serial.redirectToUSB()
