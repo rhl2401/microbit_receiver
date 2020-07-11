@@ -1,5 +1,26 @@
 function task_3 () {
     task_ongoing = 1
+    while (true) {
+        basic.showIcon(IconNames.No)
+        if (task_3_receiver_activated == 1) {
+            break;
+        }
+    }
+    running_time = input.runningTime()
+    while (current_timer < 0) {
+        current_timer = running_time + countdown_timer_run - input.runningTime()
+        basic.showNumber(Math.floor(current_timer / 1000))
+        if (task_3_finish_activated == 1) {
+            break;
+        }
+    }
+    if (current_timer > 0 && task_3_finish_activated == 1) {
+        basic.showString("AABBABA")
+    } else {
+        basic.showIcon(IconNames.Sad)
+        basic.pause(5000)
+        task_ongoing = 0
+    }
 }
 function convert_number_to_led_plot (num: number) {
     beacon_leds = [num % 5 - 1, (num - num % 5) / 5]
@@ -29,6 +50,8 @@ function task_manager () {
         task_1()
     } else if (task_no == 2) {
         task_2()
+    } else if (task_no == 3) {
+        task_3()
     } else {
     	
     }
@@ -66,16 +89,20 @@ radio.onReceivedValue(function (name, value) {
     task_3_receiver_activated = 0
     task_3_finish_activated = 0
 })
-let task_3_finish_activated = 0
-let task_3_receiver_activated = 0
 let task_no = 0
 let beacon_leds: number[] = []
+let task_3_finish_activated = 0
+let current_timer = 0
+let running_time = 0
+let task_3_receiver_activated = 0
 let task_ongoing = 0
+let countdown_timer_run = 0
 let incoming_signal = 0
 radio.setGroup(128)
 serial.redirectToUSB()
 serial.setBaudRate(BaudRate.BaudRate115200)
 incoming_signal = 0
+countdown_timer_run = 15000
 basic.forever(function () {
     if (task_ongoing == 0 && incoming_signal == 0) {
         basic.showIcon(IconNames.SmallDiamond)
