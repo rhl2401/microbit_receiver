@@ -24,6 +24,18 @@ function task_3 () {
     }
     task_ongoing = 0
 }
+function task_6 () {
+    task_ongoing = 1
+    while (steps < 500) {
+        if (input.isGesture(Gesture.Shake)) {
+            steps += 1
+            basic.showNumber(steps)
+        }
+    }
+    for (let index = 0; index < 2; index++) {
+        basic.showString("BABABBA")
+    }
+}
 function convert_number_to_led_plot (num: number) {
     beacon_leds = [num % 5 - 1, (num - num % 5) / 5]
     return beacon_leds
@@ -48,6 +60,7 @@ function task_2 () {
     task_ongoing = 0
 }
 function task_manager () {
+    // Opgave 5 er uden brug af modtageren
     if (task_no == 1) {
         task_1()
     } else if (task_no == 2) {
@@ -56,6 +69,10 @@ function task_manager () {
         task_3()
     } else if (task_no == 4) {
         task_4()
+    } else if (task_no == 5) {
+    	
+    } else if (task_no == 6) {
+        task_6()
     } else {
     	
     }
@@ -112,10 +129,8 @@ radio.onReceivedValue(function (name, value) {
             }
         }
     } else if (task_ongoing == 1 && task_no == 3) {
-        if (radio.receivedPacket(RadioPacketProperty.SignalStrength) > -75) {
-            if (value == 18) {
-                task_3_finish_activated = 1
-            }
+        if (value == 5) {
+            task_3_finish_activated = 1
         }
     }
     basic.pause(500)
@@ -126,6 +141,7 @@ radio.onReceivedValue(function (name, value) {
 })
 let task_no = 0
 let beacon_leds: number[] = []
+let steps = 0
 let task_3_finish_activated = 0
 let current_timer = 0
 let running_time = 0
