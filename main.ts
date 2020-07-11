@@ -35,6 +35,7 @@ function task_6 () {
     for (let index = 0; index < 2; index++) {
         basic.showString("BABABBA")
     }
+    task_ongoing = 0
 }
 function convert_number_to_led_plot (num: number) {
     beacon_leds = [num % 5 - 1, (num - num % 5) / 5]
