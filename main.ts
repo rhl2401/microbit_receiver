@@ -15,12 +15,14 @@ function task_3 () {
         }
     }
     if (current_timer > 0 && task_3_finish_activated == 1) {
-        basic.showString("AABBABA")
+        for (let index = 0; index < 2; index++) {
+            basic.showString("AABBABA")
+        }
     } else {
         basic.showIcon(IconNames.Sad)
         basic.pause(5000)
-        task_ongoing = 0
     }
+    task_ongoing = 0
 }
 function convert_number_to_led_plot (num: number) {
     beacon_leds = [num % 5 - 1, (num - num % 5) / 5]
@@ -52,15 +54,66 @@ function task_manager () {
         task_2()
     } else if (task_no == 3) {
         task_3()
+    } else if (task_no == 4) {
+        task_4()
     } else {
     	
     }
+}
+function morse (text: string) {
+    if (text == "A") {
+        full_screen_light.showImage(0)
+        basic.pause(200)
+        basic.clearScreen()
+        basic.pause(400)
+        full_screen_light.showImage(0)
+        basic.pause(800)
+        basic.clearScreen()
+    } else {
+        full_screen_light.showImage(0)
+        basic.pause(800)
+        basic.clearScreen()
+        basic.pause(400)
+        full_screen_light.showImage(0)
+        basic.pause(200)
+        basic.clearScreen()
+        basic.pause(400)
+        full_screen_light.showImage(0)
+        basic.pause(200)
+        basic.clearScreen()
+        basic.pause(400)
+        full_screen_light.showImage(0)
+        basic.pause(200)
+        basic.clearScreen()
+    }
+    basic.pause(2000)
 }
 input.onButtonPressed(Button.AB, function () {
     if (task_ongoing == 0) {
         task_manager()
     }
 })
+function task_4 () {
+    task_ongoing = 1
+    full_screen_light = images.createImage(`
+        # # # # #
+        # # # # #
+        # # # # #
+        # # # # #
+        # # # # #
+        `)
+    morse("A")
+    morse("B")
+    morse("A")
+    morse("A")
+    morse("A")
+    morse("B")
+    morse("A")
+    morse("B")
+    morse("B")
+    morse("A")
+    task_ongoing = 0
+}
 radio.onReceivedValue(function (name, value) {
     incoming_signal = 1
     basic.clearScreen()
@@ -89,6 +142,7 @@ radio.onReceivedValue(function (name, value) {
     task_3_receiver_activated = 0
     task_3_finish_activated = 0
 })
+let full_screen_light: Image = null
 let task_no = 0
 let beacon_leds: number[] = []
 let task_3_finish_activated = 0
