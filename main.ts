@@ -3,12 +3,19 @@ function convert_number_to_led_plot (num: number) {
     return beacon_leds
 }
 function task_1 () {
+    task_ongoing = 1
     input.setAccelerometerRange(AcceleratorRange.EightG)
     while (true) {
-    	
+        if (input.acceleration(Dimension.Strength) > 6000) {
+            for (let index = 0; index < 2; index++) {
+                basic.showString("BABABB")
+            }
+        }
     }
+    task_ongoing = 0
 }
 function task_2 () {
+    task_ongoing = 1
     for (let index = 0; index < 2; index++) {
         basic.showString("Vzopy pc dpvd qpx djg")
     }
@@ -17,13 +24,20 @@ function task_2 () {
 function task_manager () {
     if (task_no == 1) {
         task_1()
+    } else if (task_no == 2) {
+        task_2()
+    } else {
+    	
     }
-    task_ongoing = 1
 }
 input.onButtonPressed(Button.AB, function () {
-    task_manager()
+    if (task_ongoing == 0) {
+        task_manager()
+    }
 })
 radio.onReceivedValue(function (name, value) {
+    incoming_signal = 1
+    basic.clearScreen()
     if (name == "beacon" && task_ongoing == 0) {
         if (radio.receivedPacket(RadioPacketProperty.SignalStrength) > -75) {
             serial.writeNumber(radio.receivedPacket(RadioPacketProperty.SignalStrength))
@@ -32,20 +46,19 @@ radio.onReceivedValue(function (name, value) {
         }
     }
     basic.pause(500)
-    basic.showLeds(`
-        . . . . .
-        . . . . .
-        . . . . .
-        . . . . .
-        . . . . .
-        `)
+    basic.clearScreen()
+    incoming_signal = 0
 })
 let task_no = 0
 let task_ongoing = 0
 let beacon_leds: number[] = []
+let incoming_signal = 0
 radio.setGroup(128)
 serial.redirectToUSB()
 serial.setBaudRate(BaudRate.BaudRate115200)
+incoming_signal = 0
 basic.forever(function () {
-	
+    if (task_ongoing == 0 && incoming_signal == 0) {
+        basic.showIcon(IconNames.SmallDiamond)
+    }
 })
