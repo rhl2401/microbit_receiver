@@ -62,6 +62,7 @@ function task_2 () {
 }
 function task_manager () {
     // Opgave 5 er uden brug af modtageren
+    // Opgave 7 er uden brug af modtageren
     if (task_no == 1) {
         task_1()
     } else if (task_no == 2) {
@@ -74,6 +75,10 @@ function task_manager () {
     	
     } else if (task_no == 6) {
         task_6()
+    } else if (task_no == 7) {
+    	
+    } else if (task_no == 8) {
+    	
     } else {
     	
     }
