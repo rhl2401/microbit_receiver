@@ -21,6 +21,9 @@ function task_3 () {
     }
     task_ongoing = 0
 }
+input.onButtonPressed(Button.A, function () {
+    task_4()
+})
 function task_6 () {
     task_ongoing = 1
     while (steps < 500) {
@@ -154,7 +157,7 @@ radio.setGroup(128)
 serial.redirectToUSB()
 serial.setBaudRate(BaudRate.BaudRate115200)
 incoming_signal = 0
-countdown_timer_run = 15000
+countdown_timer_run = 23000
 basic.forever(function () {
     if (task_ongoing == 0 && incoming_signal == 0) {
         basic.showIcon(IconNames.SmallDiamond)
