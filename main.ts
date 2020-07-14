@@ -1,22 +1,19 @@
 function task_3 () {
     task_ongoing = 1
-    while (true) {
+    while (task_3_receiver_activated != 1) {
         basic.showIcon(IconNames.No)
-        if (task_3_receiver_activated == 1) {
-            break;
-        }
     }
     running_time = input.runningTime()
-    while (current_timer < 0) {
-        current_timer = running_time + countdown_timer_run - input.runningTime()
-        basic.showNumber(Math.floor(current_timer / 1000))
-        if (task_3_finish_activated == 1) {
-            break;
-        }
+    current_timer = input.runningTime() - running_time
+    while (current_timer < countdown_timer_run && task_3_finish_activated == 0) {
+        current_timer = input.runningTime() - running_time
+        basic.showNumber(Math.floor((countdown_timer_run - (input.runningTime() - running_time)) / 1000))
+        basic.pause(500)
     }
-    if (current_timer > 0 && task_3_finish_activated == 1) {
+    if (current_timer < countdown_timer_run && task_3_finish_activated == 1) {
         for (let index = 0; index < 2; index++) {
             basic.showString("AABBABA")
+            basic.pause(500)
         }
     } else {
         basic.showIcon(IconNames.Sad)
@@ -100,6 +97,9 @@ function morse (text: string) {
     music.rest(music.beat(BeatFraction.Breve))
 }
 input.onButtonPressed(Button.AB, function () {
+    incoming_signal = 0
+    task_3_receiver_activated = 0
+    task_3_finish_activated = 0
     if (task_ongoing == 0) {
         task_manager()
     }
@@ -121,29 +121,24 @@ function task_4 () {
 }
 radio.onReceivedValue(function (name, value) {
     incoming_signal = 1
-    basic.clearScreen()
     if (name == "beacon" && task_ongoing == 0) {
+        basic.clearScreen()
         if (radio.receivedPacket(RadioPacketProperty.SignalStrength) > -75) {
             serial.writeNumber(radio.receivedPacket(RadioPacketProperty.SignalStrength))
             led.plot(convert_number_to_led_plot(value)[0], convert_number_to_led_plot(value)[1])
             task_no = value
+            basic.pause(500)
+            basic.clearScreen()
         }
     } else if (task_ongoing == 1 && task_no == 3) {
         if (radio.receivedPacket(RadioPacketProperty.SignalStrength) > -75) {
             if (value == 3) {
                 task_3_receiver_activated = 1
+            } else if (value == 9) {
+                task_3_finish_activated = 1
             }
         }
-    } else if (task_ongoing == 1 && task_no == 3) {
-        if (value == 5) {
-            task_3_finish_activated = 1
-        }
     }
-    basic.pause(500)
-    basic.clearScreen()
-    incoming_signal = 0
-    task_3_receiver_activated = 0
-    task_3_finish_activated = 0
 })
 let task_no = 0
 let beacon_leds: number[] = []
